@@ -1,0 +1,62 @@
+<div class="card">
+  <div class="card-header">
+    <h4>Buscar vuelos</h4>
+  </div>
+  <div class="card-body">
+    <form class="form-group" [formGroup]="formBusqueda">
+      <div class="row">
+        <div class="col">
+          <label>Ciudad Origen</label>
+          <select class="form-control" formControlName="ciudadOrigen" (change)="selectDestino()" required>
+            <option selected value="">Seleccione un origen</option>
+            <option *ngFor="let ciudad of ciudadList" value="{{ ciudad.idciudad }}">{{ ciudad.nombreciudad }}</option>
+          </select>
+        </div>
+        <div class="col">
+          <label>Ciudad Destino</label>
+          <select class="form-control" formControlName="ciudadDestino" required>
+            <option selected value="">Seleccione un destino</option>
+            <option *ngFor="let ruta of rutasList" value="{{ ruta.idruta }}">{{ ruta.destino.nombreciudad }}</option>
+          </select>
+        </div>
+        <div class="col">
+          <label>Fecha</label>
+          <input type="date" class="form-control" formControlName="fechaVueloIda" min="{{ minDate }}" onkeydown="return false" required>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col">
+          <button class="btn btn-primary" (click)="buscarVueloIda()" [disabled]="formBusqueda.invalid">Buscar Vuelos</button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="card-footer">
+    <table class="table table-bordered table-hover">
+        <caption>Vuelos de ida</caption>
+        <thead>
+          <tr>
+            <th scope="col">Vuelo</th>
+            <th scope="col">Capacidad</th>
+            <th scope="col">Fecha de Vuelo</th>
+            <th scope="col">Millas</th>
+            <th scope="col">Ciudad Origen</th>
+            <th scope="col">Ciudad Destino</th>
+            <th scope="col">Precio</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let vuelo of vueloIdaList" (click)="prueba(vuelo)">
+            <th scope="col">{{vuelo.idvuelo}}</th>
+            <th scope="col">{{vuelo.capacidad}}</th>
+            <th scope="col">{{vuelo.fechavuelo | date: 'dd-MM-yyyy'}}</th>
+            <th scope="col">{{vuelo.millas}}</th>
+            <th scope="col">{{vuelo.idruta.origen.nombreciudad}}</th>
+            <th scope="col">{{vuelo.idruta.destino.nombreciudad}}</th>
+            <th scope="col">{{vuelo.precio}}</th>
+          </tr>
+        </tbody>
+      </table>
+  </div>
+</div>

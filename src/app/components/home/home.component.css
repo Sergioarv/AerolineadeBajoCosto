@@ -1,0 +1,11 @@
+.card {
+    margin: 4em;
+}
+
+.card-header{
+    background-color: lightgrey;
+}
+
+.card-footer {
+    background-color: rgba(211, 211, 211, 0);
+}
