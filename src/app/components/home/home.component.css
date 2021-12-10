@@ -1,10 +1,23 @@
 .card {
-    margin: 2em;
+    margin: 3%;
+    font-weight: normal;
 }
 
-.card .mat-expansion-panel-header {
-    padding: 0.5em;
-    background-color: lightgrey;
+.mat-expansion-panel-header, .mat-expansion-panel-header:focus {
+    background-color: rgb(218, 218, 218);
+}
+
+table {
+    width: 100%;
+}
+
+table caption {
+    padding-left: 1em;
+}
+
+h2 {
+    padding-top: 0.6em;
+    padding-left: 0.5em;
 }
 
 th {

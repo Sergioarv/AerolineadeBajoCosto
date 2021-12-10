@@ -8,7 +8,7 @@
     <mat-form-field appearance="fill">
       <form class="form-group" [formGroup]="formBusqueda">
         <div class="row">
-          <div class="col">
+          <div class="col-sm-12 col-md-6 col-lg-3">
             <label>Ciudad Origen</label>
             <select class="form-control" formControlName="ciudadOrigen" (change)="selectDestino(1)" required>
               <option selected value="">Seleccione un origen</option>
@@ -17,7 +17,7 @@
               </option>
             </select>
           </div>
-          <div class="col">
+          <div class="col-sm-12 col-md-6 col-lg-3">
             <label>Ciudad Destino</label>
             <select class="form-control" formControlName="ciudadDestino" required>
               <option selected value="">Seleccione un destino</option>
@@ -26,15 +26,19 @@
               </option>
             </select>
           </div>
-          <div class="col">
+          <div class="col-sm-12 col-md-6 col-lg-3">
             <label>Fecha</label>
             <input type="date" class="form-control" formControlName="fechaVueloIda" min="{{ minDate }}"
               onkeydown="return true" required />
           </div>
+          <div class="col-sm-12 col-md-6 col-lg-3">
+            <label>Cantidad pasajeros</label>
+            <input type="number" class="form-control" formControlName="cantPasajeros" min="1" required />
+          </div>
         </div>
         <br />
         <div class="row">
-          <div class="col">
+          <div class="col-sm-12 col-md-6 col-lg-4">
             <button class="btn btn-primary" (click)="buscarVueloIda()" [disabled]="formBusqueda.invalid">
               Buscar Vuelos
             </button>
@@ -42,7 +46,7 @@
         </div>
       </form>
 
-      <table class="table table-bordered table-hover">
+      <table class="table table-bordered table-hover table-responsive-lg">
         <caption>
           Vuelos de ida
         </caption>
@@ -51,29 +55,31 @@
             <th scope="col">Vuelo</th>
             <th scope="col">Capacidad</th>
             <th scope="col">Fecha de Vuelo</th>
-            <th scope="col">Millas</th>
+            <th scope="col">Hora de Salida</th>
+            <th scope="col">Duracion del Vuelo</th>
             <th scope="col">Ciudad Origen</th>
             <th scope="col">Ciudad Destino</th>
-            <th scope="col">Duracion del Vuelo</th>
             <th scope="col">Vuelo con escala</th>
+            <th scope="col">Millas por vuelo</th>
             <th scope="col">Precio</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let vuelo of vueloIdaList">
             <th scope="col">
-              <label class="form-check-label">
-                <input class="form-check-input" type="radio" name="inlineRadioOptions" value="{{ vuelo.idvuelo }}" (change)="selectVuelo(vuelo)">
+              <label class="form-check-label" style="padding-left: 1em;">
+                <input class="form-check-input" type="radio" name="inlineRadioOptions" value="{{ vuelo.idvuelo }}" (change)="selectVuelo(vuelo, 1)">
                 Vuelo {{ vuelo.idvuelo }}</label>
             </th>
             <th scope="col">{{ vuelo.capacidad }}</th>
             <th scope="col">{{ vuelo.fechavuelo | date: "dd-MM-yyyy" }}</th>
-            <th scope="col">{{ vuelo.millas }}</th>
+            <th scope="col">{{ vuelo.horavuelo }}</th>
+            <th scope="col">{{ vuelo.idruta.duracion | tiempo }}</th>
             <th scope="col">{{ vuelo.idruta.origen.nombreciudad }}</th>
             <th scope="col">{{ vuelo.idruta.destino.nombreciudad }}</th>
-            <th scope="col">{{ vuelo.idruta.duracion | date: 'm' }}</th>
             <th scope="col">{{ vuelo.idruta.escala ? 'Con Escalas' : 'Sin Escalas'}}</th>
-            <th scope="col">{{ vuelo.precio | currency: 'COP'}}</th>
+            <th scope="col">{{ vuelo.millas }}</th>
+            <th scope="col">{{ vuelo.precio * descuIda | currency:"COP":"symbol-narrow":'1.0-2' }}</th>
           </tr>
         </tbody>
       </table>
@@ -92,7 +98,7 @@
     <mat-form-field appearance="fill">
       <form class="form-group" [formGroup]="formBusquedaRegreso">
         <div class="row">
-          <div class="col">
+          <div class="col-sm-12 col-md-6 col-lg-4">
             <label>Ciudad Origen</label>
             <select class="form-control" formControlName="ciudadOrigenRegreso" (change)="selectDestino(2)" required>
               <option selected value="">Seleccione un origen</option>
@@ -101,7 +107,7 @@
               </option>
             </select>
           </div>
-          <div class="col">
+          <div class="col-sm-12 col-md-6 col-lg-4">
             <label>Ciudad Destino</label>
             <select class="form-control" formControlName="ciudadDestinoRegreso" required>
               <option selected value="">Seleccione un destino</option>
@@ -110,7 +116,7 @@
               </option>
             </select>
           </div>
-          <div class="col">
+          <div class="col-sm-12 col-md-6 col-lg-4">
             <label>Fecha</label>
             <input type="date" class="form-control" formControlName="fechaVueloRegreso" min="{{ minDate }}"
               onkeydown="return true" required />
@@ -118,15 +124,15 @@
         </div>
         <br />
         <div class="row">
-          <div class="col">
-            <button class="btn btn-primary" (click)="buscarVueloRegreso()" [disabled]="formBusqueda.invalid">
+          <div class="col-sm-12 col-md-6 col-lg-4">
+            <button class="btn btn-primary" (click)="buscarVueloRegreso()" [disabled]="formBusquedaRegreso.invalid">
               Buscar Vuelos
             </button>
           </div>
         </div>
       </form>
 
-      <table class="table table-bordered table-hover">
+      <table class="table table-bordered table-hover table-responsive-lg">
         <caption>
           Vuelos de regreso
         </caption>
@@ -135,9 +141,12 @@
             <th scope="col">Vuelo</th>
             <th scope="col">Capacidad</th>
             <th scope="col">Fecha de Vuelo</th>
-            <th scope="col">Millas</th>
+            <th scope="col">Hora de Salida</th>
+            <th scope="col">Duracion del Vuelo</th>
             <th scope="col">Ciudad Origen</th>
             <th scope="col">Ciudad Destino</th>
+            <th scope="col">Vuelo con escala</th>
+            <th scope="col">Millas por vuelo</th>
             <th scope="col">Precio</th>
           </tr>
         </thead>
@@ -145,15 +154,18 @@
           <tr *ngFor="let vuelo of vueloRegresoList">
             <th scope="col">
               <label class="form-check-label">
-                <input class="form-check-input" type="radio" name="inlineRadioOptions" value="{{ vuelo.idvuelo }}" (change)="selectVuelo(vuelo)">
+                <input class="form-check-input" type="radio" name="inlineRadioOptions" value="{{ vuelo.idvuelo }}" (change)="selectVuelo(vuelo, 2)">
                 Vuelo {{ vuelo.idvuelo }}</label>
             </th>
             <th scope="col">{{ vuelo.capacidad }}</th>
             <th scope="col">{{ vuelo.fechavuelo | date: "dd-MM-yyyy" }}</th>
-            <th scope="col">{{ vuelo.millas }}</th>
+            <th scope="col">{{ vuelo.horavuelo }}</th>
+            <th scope="col">{{ vuelo.idruta.duracion | tiempo }}</th>
             <th scope="col">{{ vuelo.idruta.origen.nombreciudad }}</th>
             <th scope="col">{{ vuelo.idruta.destino.nombreciudad }}</th>
-            <th scope="col">{{ vuelo.precio | currency: 'COP' }}</th>
+            <th scope="col">{{ vuelo.idruta.escala ? 'Con Escalas' : 'Sin Escalas'}}</th>
+            <th scope="col">{{ vuelo.millas }}</th>
+            <th scope="col">{{ vuelo.precio * descuRegreso | currency:"COP":"symbol-narrow":'1.0-2' }}</th>
           </tr>
         </tbody>
       </table>
@@ -162,5 +174,35 @@
       <button class="btn btn-success" (click)="vueloRegreso()">Continuar</button>
     </mat-action-row>
   </mat-expansion-panel>
+
+  <!-- Resumen de compar-->
+  <mat-expansion-panel [expanded]="activeStep[2]" [disabled]="!activeStep[2]" hideToggle>
+    <mat-expansion-panel-header>
+      <mat-panel-title> Resumen de Compra </mat-panel-title>
+    </mat-expansion-panel-header>
+    <br>
+    <mat-form-field appearance="fill">
+      <h2 *ngIf="vueloDeIda">Valor unitario por vuelo de Ida: {{ vueloDeIda.precio * descuIda | currency:"COP":"symbol-narrow":'1.0-2' }}</h2>
+      <h2 *ngIf="vueloDeRegreso">Valor unitario por Vuelo de Regreso: {{ vueloDeRegreso.precio * descuRegreso | currency:"COP":"symbol-narrow":'1.0-2' }}</h2>
+      <h2 >Valor unitario por tiquete: {{ (vueloDeIda.precio * descuIda) + (vueloDeRegreso.precio * descuRegreso) | currency:"COP":"symbol-narrow":'1.0-2' }}</h2>
+      <h2 >Valor total: {{ ((vueloDeIda.precio * descuIda) + (vueloDeRegreso.precio * descuRegreso)) * cantDePasajeros | currency:"COP":"symbol-narrow":'1.0-2' }}</h2>
+    </mat-form-field>
+    <mat-action-row>
+      <button class="btn btn-success" (click)="toggle(3)">Continuar</button>
+    </mat-action-row>
+  </mat-expansion-panel>
+
+    <!-- Compradores -->
+    <mat-expansion-panel [expanded]="activeStep[3]" [disabled]="!activeStep[3]" hideToggle>
+      <mat-expansion-panel-header>
+        <mat-panel-title>Compradores</mat-panel-title>
+      </mat-expansion-panel-header>
+      <br>
+      <mat-form-field appearance="fill">
+      </mat-form-field>
+      <mat-action-row>
+        <button class="btn btn-success" (click)="toggle(3)">Continuar</button>
+      </mat-action-row>
+    </mat-expansion-panel>
 
 </mat-accordion>

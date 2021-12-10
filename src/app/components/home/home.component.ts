@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Ciudad } from 'src/app/model/ciudad';
 import { Ruta } from 'src/app/model/ruta';
+import { Tiquete } from 'src/app/model/tiquete';
 import { Vuelo } from 'src/app/model/vuelo';
 import { CiudadService } from 'src/app/service/ciudad.service';
 import { RutaService } from 'src/app/service/ruta.service';
@@ -22,14 +23,24 @@ export class HomeComponent implements OnInit {
   minDate: any;
   maXDate: any;
 
+  descuIda: number = 0;
+  descuRegreso: number = 0;
+  cantDePasajeros;
+
   vueloDeIda: Vuelo;
+  vueloDeRegreso: Vuelo;
+
+  tiqueteList!: Tiquete[];
+
+  reg: RegExp = /[0-9]/;
 
   activeStep: boolean[] = [true, false, false, false, false, false, false, false, false, false, false];
 
   formBusqueda = new FormGroup({
     ciudadOrigen: new FormControl(),
     ciudadDestino: new FormControl(),
-    fechaVueloIda: new FormControl()
+    fechaVueloIda: new FormControl(),
+    cantPasajeros: new FormControl(1, [Validators.pattern('^[0-9]+')])
   });
 
   formBusquedaRegreso = new FormGroup({
@@ -42,14 +53,17 @@ export class HomeComponent implements OnInit {
     private ciudadService: CiudadService,
     private rutaService: RutaService,
     private vueloService: VueloService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
   ) {
     this.ciudadList = [];
     this.rutasList = [];
     this.vueloIdaList = [];
     this.vueloRegresoList = [];
+    this.tiqueteList = [];
     this.dateNow = new Date();
     this.vueloDeIda = new Vuelo();
+    this.vueloDeRegreso = new Vuelo;
+    this.cantDePasajeros = 1;
     this.minDate = this.datePipe.transform(this.dateNow, 'yyyy-MM-dd');
   }
 
@@ -95,10 +109,28 @@ export class HomeComponent implements OnInit {
   buscarVueloIda(): void {
     const ruta = this.formBusqueda.controls['ciudadDestino'].value;
     const fechaIda = this.formBusqueda.controls['fechaVueloIda'].value;
-
+    const cantPasajeros = this.formBusqueda.controls['cantPasajeros'].value;
+    
     this.vueloService.buscarVuelos(fechaIda, ruta).subscribe((resp) => {
       this.vueloIdaList = resp;
+      this.descuIda = this.calcDesc(fechaIda);
     });
+  }
+
+  calcDesc(fechaFinal: Date): any {
+
+    let days = Math.floor((Date.UTC(new Date(fechaFinal).getFullYear(), new Date(fechaFinal).getMonth(), new Date(fechaFinal).getDate())-Date.UTC(new Date(this.dateNow).getFullYear(), new Date(this.dateNow).getMonth(), new Date(this.dateNow).getDate()) )/(1000 * 60 * 60 * 24));
+    let descuPorFecha;
+
+    if(days >= 0 && days < 15){
+      descuPorFecha = 1;
+    } else if(days >= 15 && days < 50){
+      descuPorFecha = (100-days)/100;
+    } else {
+      descuPorFecha = 50/100;
+    }
+
+    return descuPorFecha;
   }
 
   buscarVueloRegreso(): void {
@@ -107,24 +139,30 @@ export class HomeComponent implements OnInit {
 
     this.vueloService.buscarVuelos(fechaRegreso, ruta).subscribe((resp) => {
       this.vueloRegresoList = resp;
+      this.descuRegreso = this.calcDesc(fechaRegreso);
     });
   }
 
-  selectVuelo(vuelo: Vuelo): void {
-    this.vueloDeIda = vuelo != undefined ? vuelo : new Vuelo();
+
+  selectVuelo(vuelo: Vuelo, tipo: number): void {
+    if (tipo == 1) {
+      this.vueloDeIda = vuelo != undefined ? vuelo : new Vuelo();
+    }else if(tipo == 2){
+      this.vueloDeRegreso = vuelo != undefined ? vuelo : new Vuelo();
+    }
   }
 
   vueloIda(): void {
     if (this.vueloDeIda.idvuelo != '') {
       this.formBusquedaRegreso.get('ciudadOrigenRegreso')?.setValue(this.vueloDeIda.idruta.destino.idciudad);
-      console.log('Antes de continuar', this.formBusquedaRegreso.controls['ciudadOrigenRegreso'].value);
+      this.cantDePasajeros = this.formBusqueda.controls['cantPasajeros'].value;
       this.selectDestino(2);
       this.toggle(1);
     }
   }
 
   vueloRegreso(): void {
-    if (this.vueloDeIda.idvuelo != '') {
+    if (this.vueloDeRegreso.idvuelo != '') {
       this.toggle(2);
     }
   }

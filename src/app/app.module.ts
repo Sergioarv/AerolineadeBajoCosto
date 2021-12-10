@@ -9,9 +9,15 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { TiempoPipe } from './utils/pipe/tiempo.pipe';
+
 
 @NgModule({
-  declarations: [AppComponent, HomeComponent],
+  declarations: [
+    AppComponent, 
+    HomeComponent, 
+    TiempoPipe
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -23,7 +29,10 @@ import { MatExpansionModule } from '@angular/material/expansion';
   schemas:[
     CUSTOM_ELEMENTS_SCHEMA
   ],
-  providers: [DatePipe],
+  providers: [
+    DatePipe,
+    TiempoPipe
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

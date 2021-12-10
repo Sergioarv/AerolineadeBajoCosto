@@ -6,6 +6,8 @@ export class Vuelo {
 
     fechavuelo = new Date;
 
+    horavuelo = new Date;
+
     precio = 0.0;
 
     capacidad = 0;
