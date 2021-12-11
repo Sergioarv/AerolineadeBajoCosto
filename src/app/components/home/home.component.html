@@ -68,7 +68,8 @@
           <tr *ngFor="let vuelo of vueloIdaList">
             <th scope="col">
               <label class="form-check-label" style="padding-left: 1em;">
-                <input class="form-check-input" type="radio" name="inlineRadioOptions" value="{{ vuelo.idvuelo }}" (change)="selectVuelo(vuelo, 1)">
+                <input class="form-check-input" type="radio" name="inlineRadioOptions" value="{{ vuelo.idvuelo }}"
+                  (change)="selectVuelo(vuelo, 1)">
                 Vuelo {{ vuelo.idvuelo }}</label>
             </th>
             <th scope="col">{{ vuelo.capacidad }}</th>
@@ -89,7 +90,7 @@
     </mat-action-row>
   </mat-expansion-panel>
 
-      <!-- Panel de acordion Vuelo de regreso  -->
+  <!-- Panel de acordion Vuelo de regreso  -->
   <mat-expansion-panel [expanded]="activeStep[1]" [disabled]="!activeStep[1]" hideToggle>
     <mat-expansion-panel-header>
       <mat-panel-title> Vuelo de Regreso </mat-panel-title>
@@ -154,7 +155,8 @@
           <tr *ngFor="let vuelo of vueloRegresoList">
             <th scope="col">
               <label class="form-check-label">
-                <input class="form-check-input" type="radio" name="inlineRadioOptions" value="{{ vuelo.idvuelo }}" (change)="selectVuelo(vuelo, 2)">
+                <input class="form-check-input" type="radio" name="inlineRadioOptions" value="{{ vuelo.idvuelo }}"
+                  (change)="selectVuelo(vuelo, 2)">
                 Vuelo {{ vuelo.idvuelo }}</label>
             </th>
             <th scope="col">{{ vuelo.capacidad }}</th>
@@ -182,27 +184,63 @@
     </mat-expansion-panel-header>
     <br>
     <mat-form-field appearance="fill">
-      <h2 *ngIf="vueloDeIda">Valor unitario por vuelo de Ida: {{ vueloDeIda.precio * descuIda | currency:"COP":"symbol-narrow":'1.0-2' }}</h2>
-      <h2 *ngIf="vueloDeRegreso">Valor unitario por Vuelo de Regreso: {{ vueloDeRegreso.precio * descuRegreso | currency:"COP":"symbol-narrow":'1.0-2' }}</h2>
-      <h2 >Valor unitario por tiquete: {{ (vueloDeIda.precio * descuIda) + (vueloDeRegreso.precio * descuRegreso) | currency:"COP":"symbol-narrow":'1.0-2' }}</h2>
-      <h2 >Valor total: {{ ((vueloDeIda.precio * descuIda) + (vueloDeRegreso.precio * descuRegreso)) * cantDePasajeros | currency:"COP":"symbol-narrow":'1.0-2' }}</h2>
+      <h2 *ngIf="vueloDeIda">Valor unitario por vuelo de Ida: {{ vueloDeIda.precio * descuIda |
+        currency:"COP":"symbol-narrow":'1.0-2' }}</h2>
+      <h2 *ngIf="vueloDeRegreso">Valor unitario por Vuelo de Regreso: {{ vueloDeRegreso.precio * descuRegreso |
+        currency:"COP":"symbol-narrow":'1.0-2' }}</h2>
+      <h2>Valor unitario por tiquete: {{ (vueloDeIda.precio * descuIda) + (vueloDeRegreso.precio * descuRegreso) |
+        currency:"COP":"symbol-narrow":'1.0-2' }}</h2>
+      <h2>Valor total: {{ ((vueloDeIda.precio * descuIda) + (vueloDeRegreso.precio * descuRegreso)) * cantDePasajeros |
+        currency:"COP":"symbol-narrow":'1.0-2' }}</h2>
     </mat-form-field>
     <mat-action-row>
       <button class="btn btn-success" (click)="toggle(3)">Continuar</button>
     </mat-action-row>
   </mat-expansion-panel>
 
-    <!-- Compradores -->
-    <mat-expansion-panel [expanded]="activeStep[3]" [disabled]="!activeStep[3]" hideToggle>
-      <mat-expansion-panel-header>
-        <mat-panel-title>Compradores</mat-panel-title>
-      </mat-expansion-panel-header>
-      <br>
-      <mat-form-field appearance="fill">
-      </mat-form-field>
-      <mat-action-row>
-        <button class="btn btn-success" (click)="toggle(3)">Continuar</button>
-      </mat-action-row>
-    </mat-expansion-panel>
+  <!-- Compradores -->
+  <mat-expansion-panel [expanded]="activeStep[3]" [disabled]="!activeStep[3]" hideToggle>
+    <mat-expansion-panel-header>
+      <mat-panel-title>Compradores</mat-panel-title>
+    </mat-expansion-panel-header>
+    <br>
+    <mat-form-field appearance="fill">
+      <form class="form-group" [formGroup]="formPasajeros">
+        <div class="row">
+          <div class="col-sm-12 col-md-6 col-lg-4">
+            <label>Numero de Pasaporte:</label>
+            <input class="form-control" formControlName="pasaporte" type="number" min="1">
+          </div>
+          <div class="col-sm-12 col-md-6 col-lg-4">
+            <label>Nombre:</label>
+            <input class="form-control" formControlName="nombrePasajero" type="text">
+          </div>
+          <div class="col-sm-12 col-md-6 col-lg-4">
+            <label>Apellido:</label>
+            <input class="form-control" formControlName="apellidoPasajero" type="text">
+          </div>
+          <div class="col-sm-12 col-md-6 col-lg-4">
+            <label>Telefono:</label>
+            <input class="form-control" formControlName="telefono" type="number" min="1">
+          </div>
+          <div class="col-sm-12 col-md-6 col-lg-4">
+            <label>Email:</label>
+            <input class="form-control" formControlName="email" type="email">
+          </div>
+          <div class="col-sm-12 col-md-6 col-lg-4">
+            <label>Edad:</label>
+            <input class="form-control" formControlName="edad" type="number" min="1">
+          </div>
+          <div class="col-sm-12 col-md-6 col-lg-4" *ngIf="vueloDeIda.idruta.destino.visado">
+            <label>Fecha de Expedicion del pasaporte:</label>
+            <input class="form-control" formControlName="fechaExpedicion" type="date" min="{{ minDate }}">
+          </div>
+        </div>
+      </form>
+    </mat-form-field>
+    <mat-action-row>
+      <button class="btn btn-success" (click)="validarPasajeros()">Continuar</button>
+    </mat-action-row>
+  </mat-expansion-panel>
 
 </mat-accordion>

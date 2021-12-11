@@ -3,8 +3,9 @@
     font-weight: normal;
 }
 
-.mat-expansion-panel-header, .mat-expansion-panel-header:focus {
-    background-color: rgb(218, 218, 218);
+.mat-expansion-panel-header:not([aria-disabled=true]), .mat-expansion-panel-header:hover:not([aria-disabled=true])
+{
+    background: rgb(38, 175, 238);
 }
 
 table {

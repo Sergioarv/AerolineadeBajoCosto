@@ -2,6 +2,7 @@ import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Ciudad } from 'src/app/model/ciudad';
+import { Pasajero } from 'src/app/model/pasajero';
 import { Ruta } from 'src/app/model/ruta';
 import { Tiquete } from 'src/app/model/tiquete';
 import { Vuelo } from 'src/app/model/vuelo';
@@ -30,6 +31,9 @@ export class HomeComponent implements OnInit {
   vueloDeIda: Vuelo;
   vueloDeRegreso: Vuelo;
 
+  pasajero: Pasajero;
+  tiquete: Tiquete;
+
   tiqueteList!: Tiquete[];
 
   reg: RegExp = /[0-9]/;
@@ -49,6 +53,16 @@ export class HomeComponent implements OnInit {
     fechaVueloRegreso: new FormControl()
   });
 
+  formPasajeros = new FormGroup({
+    pasaporte: new FormControl(),
+    nombrePasajero: new FormControl('', [Validators.pattern('^[A-Za-zñÑáéíóúÁÉÍÓÚ]+[A-Za-zñÑáéíóúÁÉÍÓÚ\\s]+[A-Za-zñÑáéíóúÁÉÍÓÚ]$')]),
+    apellidoPasajero: new FormControl('', [Validators.pattern('^[A-Za-zñÑáéíóúÁÉÍÓÚ]+[A-Za-zñÑáéíóúÁÉÍÓÚ\\s]+[A-Za-zñÑáéíóúÁÉÍÓÚ]$')]),
+    telefono: new FormControl([Validators.minLength(10), Validators.maxLength(10)]),
+    email: new FormControl('', [Validators.pattern('^[a-zA-Z._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$')]),
+    edad: new FormControl(0),
+    fechaExpedicion: new FormControl()
+  });
+
   constructor(
     private ciudadService: CiudadService,
     private rutaService: RutaService,
@@ -60,6 +74,8 @@ export class HomeComponent implements OnInit {
     this.vueloIdaList = [];
     this.vueloRegresoList = [];
     this.tiqueteList = [];
+    this.pasajero = new Pasajero();
+    this.tiquete = new Tiquete();
     this.dateNow = new Date();
     this.vueloDeIda = new Vuelo();
     this.vueloDeRegreso = new Vuelo;
@@ -76,6 +92,7 @@ export class HomeComponent implements OnInit {
     this.formBusquedaRegreso.get('ciudadOrigenRegreso')?.setValue('');
     this.formBusquedaRegreso.get('ciudadDestinoRegreso')?.setValue('');
     this.formBusquedaRegreso.get('fechaVueloRegreso')?.setValue(this.datePipe.transform(this.dateNow, 'yyyy-MM-dd'));
+    this.formPasajeros.get('fechaExpedicion')?.setValue(this.datePipe.transform(this.dateNow, 'yyyy-MM-dd'));
   }
 
   getAllCiudad(): void {
@@ -110,7 +127,7 @@ export class HomeComponent implements OnInit {
     const ruta = this.formBusqueda.controls['ciudadDestino'].value;
     const fechaIda = this.formBusqueda.controls['fechaVueloIda'].value;
     const cantPasajeros = this.formBusqueda.controls['cantPasajeros'].value;
-    
+
     this.vueloService.buscarVuelos(fechaIda, ruta).subscribe((resp) => {
       this.vueloIdaList = resp;
       this.descuIda = this.calcDesc(fechaIda);
@@ -119,15 +136,15 @@ export class HomeComponent implements OnInit {
 
   calcDesc(fechaFinal: Date): any {
 
-    let days = Math.floor((Date.UTC(new Date(fechaFinal).getFullYear(), new Date(fechaFinal).getMonth(), new Date(fechaFinal).getDate())-Date.UTC(new Date(this.dateNow).getFullYear(), new Date(this.dateNow).getMonth(), new Date(this.dateNow).getDate()) )/(1000 * 60 * 60 * 24));
+    let days = Math.floor((Date.UTC(new Date(fechaFinal).getFullYear(), new Date(fechaFinal).getMonth(), new Date(fechaFinal).getDate()) - Date.UTC(new Date(this.dateNow).getFullYear(), new Date(this.dateNow).getMonth(), new Date(this.dateNow).getDate())) / (1000 * 60 * 60 * 24));
     let descuPorFecha;
 
-    if(days >= 0 && days < 15){
+    if (days >= 0 && days < 15) {
       descuPorFecha = 1;
-    } else if(days >= 15 && days < 50){
-      descuPorFecha = (100-days)/100;
+    } else if (days >= 15 && days < 50) {
+      descuPorFecha = (100 - days) / 100;
     } else {
-      descuPorFecha = 50/100;
+      descuPorFecha = 50 / 100;
     }
 
     return descuPorFecha;
@@ -147,7 +164,7 @@ export class HomeComponent implements OnInit {
   selectVuelo(vuelo: Vuelo, tipo: number): void {
     if (tipo == 1) {
       this.vueloDeIda = vuelo != undefined ? vuelo : new Vuelo();
-    }else if(tipo == 2){
+    } else if (tipo == 2) {
       this.vueloDeRegreso = vuelo != undefined ? vuelo : new Vuelo();
     }
   }
@@ -163,8 +180,25 @@ export class HomeComponent implements OnInit {
 
   vueloRegreso(): void {
     if (this.vueloDeRegreso.idvuelo != '') {
+      console.log("Vuelo de Ida", this.vueloDeIda);
       this.toggle(2);
     }
+  }
+
+  validarPasajeros(): void {
+    console.log("Entre");
+    if (this.formPasajeros.valid) {
+      this.pasajero.pasaporte = this.formPasajeros.controls['nombrePasajero'].value;
+      this.pasajero.nombre = this.formPasajeros.controls['nombrePasajero'].value;
+      this.pasajero.apellido = this.formPasajeros.controls['nombrePasajero'].value;
+      this.pasajero.telefono = this.formPasajeros.controls['nombrePasajero'].value;
+      this.pasajero.email = this.formPasajeros.controls['nombrePasajero'].value;
+      this.pasajero.edad = this.formPasajeros.controls['nombrePasajero'].value;
+      this.formPasajeros.reset();
+      this.formPasajeros.get('fechaExpedicion')?.setValue(this.datePipe.transform(this.dateNow, 'yyyy-MM-dd'));
+      console.log(this.pasajero);
+    }
+    console.log("salio");
   }
 
   // Funcion para habilitar y deshabilitar acordiones

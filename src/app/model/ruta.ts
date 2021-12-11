@@ -4,6 +4,6 @@ export class Ruta {
     idruta = '';
     escala = '';
     duracion = '';
-    origen!: Ciudad;
-    destino!: Ciudad;
+    origen: Ciudad = new Ciudad();
+    destino: Ciudad = new Ciudad();
 }
