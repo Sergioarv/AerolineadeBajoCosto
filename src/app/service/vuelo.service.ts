@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { GlobalConstant } from '../utils/constants/global.constants';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class VueloService {
   ) { }
 
   buscarVuelos(fechaVuelo: any, idRuta: any): Observable<any> {
-    const URL = 'http://localhost:8080/vuelo/buscarvuelos';
+    const URL = GlobalConstant.URL_ENDPOINT + '/vuelo/buscarvuelos';
     let params = '';
     // tslint:disable-next-line: max-line-length
     params = fechaVuelo ? (params.length > 0 ? params.concat('&fechaVuelo=').concat(fechaVuelo) : params.concat('?fechaVuelo=').concat(fechaVuelo)) :  params;

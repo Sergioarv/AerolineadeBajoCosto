@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { GlobalConstant } from '../utils/constants/global.constants';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class ReservaService {
   ) { }
 
   saveReserva(body: any): Observable<any> {
-    const URL = 'http://localhost:8080/reserva';
+    const URL = GlobalConstant.URL_ENDPOINT + '/reserva';
     return this.http.post<any>(URL, body);
   }
 }
