@@ -7,7 +7,7 @@ const app = express();
 app.use(express.static('./dist/aerolineade-bajo-costo'));
 
 app.get('/*', (req, res) =>
-    res.sendFile('index.html', {root: 'dist/angular-app-heroku/'}),
+    res.sendFile('index.html', {root: 'dist/aerolineade-bajo-costo/'}),
 );
 
 // Start the app by listening on the default Heroku port
