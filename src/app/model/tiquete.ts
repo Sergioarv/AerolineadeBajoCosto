@@ -8,4 +8,5 @@ export class Tiquete {
     vueloida: Vuelo = new Vuelo();
     vueloregreso: Vuelo = new Vuelo();
     valortotal = 0;
+    idreserva = '';
 }
