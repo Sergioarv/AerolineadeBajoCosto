@@ -13,9 +13,9 @@ import { ReservaService } from 'src/app/service/reserva.service';
 import { RutaService } from 'src/app/service/ruta.service';
 import { TiqueteService } from 'src/app/service/tiquete.service';
 import { VueloService } from 'src/app/service/vuelo.service';
-import pdfMake from 'pdfmake/build/pdfmake';
-import pdfFonts from 'pdfmake/build/vfs_fonts';
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
+// import pdfMake from 'pdfmake/build/pdfmake';
+// import pdfFonts from 'pdfmake/build/vfs_fonts';
+// pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
   selector: 'app-home',
@@ -282,6 +282,7 @@ export class HomeComponent implements OnInit {
 
                 if (this.cantRestantePasajeros == this.cantDePasajeros) {
                   this.enviarPDFS();
+                  this.closed();
                 }
               })
             })
@@ -337,11 +338,25 @@ export class HomeComponent implements OnInit {
         }
       }
 
-      const pdf = pdfMake.createPdf(pdfTiquete);
+      // const pdf = pdfMake.createPdf(pdfTiquete);
 
-      pdf.download();
+      // pdf.download();
     });
 
+  }
+
+  resetFormBusqueda() {
+    this.formBusqueda.get('ciudadOrigen')?.setValue('');
+    this.formBusqueda.get('ciudadDestino')?.setValue('');
+    this.formBusqueda.get('fechaVueloIda')?.setValue(this.datePipe.transform(this.dateNow, 'yyyy-MM-dd'));
+    this.formBusqueda.get('cantPasajeros')?.setValue(1);
+  }
+
+  resetFormBusquedaRegreso() {
+
+    this.formBusquedaRegreso.get('ciudadOrigenRegreso')?.setValue('');
+    this.formBusquedaRegreso.get('ciudadDestinoRegreso')?.setValue('');
+    this.formBusquedaRegreso.get('fechaVueloRegreso')?.setValue(this.datePipe.transform(this.dateNow, 'yyyy-MM-dd'));
   }
 
   resetFormPasajeros() {
@@ -352,6 +367,13 @@ export class HomeComponent implements OnInit {
     this.formPasajeros.get('email')?.setValue('');
     this.formPasajeros.get('edad')?.setValue(1);
     this.formPasajeros.get('fechaExpedicion')?.setValue(this.datePipe.transform(this.dateNow, 'yyyy-MM-dd'));
+  }
+
+  closed(){
+    this.resetFormBusqueda();
+    this.resetFormBusquedaRegreso();
+    this.resetFormPasajeros();
+    this.toggle(0);
   }
 
   // Funcion para habilitar y deshabilitar acordiones
