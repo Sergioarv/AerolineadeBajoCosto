@@ -1,4 +1,5 @@
 import { Pasajero } from "./pasajero";
+import { Reserva } from "./reserva";
 import { Vuelo } from "./vuelo";
 
 export class Tiquete {
@@ -8,5 +9,5 @@ export class Tiquete {
     vueloida: Vuelo = new Vuelo();
     vueloregreso: Vuelo = new Vuelo();
     valortotal = 0;
-    idreserva = '';
+    idreserva: Reserva = new Reserva();
 }

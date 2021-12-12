@@ -1,7 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ToastrService } from 'ngx-toastr';
 import { Ciudad } from 'src/app/model/ciudad';
 import { Pasajero } from 'src/app/model/pasajero';
 import { Reserva } from 'src/app/model/reserva';
@@ -14,6 +13,9 @@ import { ReservaService } from 'src/app/service/reserva.service';
 import { RutaService } from 'src/app/service/ruta.service';
 import { TiqueteService } from 'src/app/service/tiquete.service';
 import { VueloService } from 'src/app/service/vuelo.service';
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
   selector: 'app-home',
@@ -255,7 +257,7 @@ export class HomeComponent implements OnInit {
           }
           this.pasajeroService.savePasajero(this.pasajero).subscribe((resp) => {
             this.pasajero = resp;
-            
+
             this.reservaService.saveReserva(this.reserva).subscribe(data => {
 
               this.verificarFecuencia(this.pasajero.pasaporte);
@@ -265,10 +267,10 @@ export class HomeComponent implements OnInit {
               this.tiquete.vueloida = this.vueloDeIda;
               this.tiquete.vueloregreso = this.vueloDeRegreso;
               this.tiquete.idreserva = data;
-              
+
               valorTotal = this.viajeroFrecuente >= 10 ? (this.viajeroFrecuente >= 15 ? valorTotal * 0.90 : valorTotal * 0.95) : valorTotal;
               valorTotal = this.pasajero.edad > 65 ? valorTotal * 0.97 : (this.pasajero.edad < 2 ? valorTotal * 0.10 : valorTotal);
-              
+
               this.tiquete.valortotal = valorTotal;
 
               this.tiqueteService.saveTiquete(this.tiquete).subscribe(resp => {
@@ -294,18 +296,52 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  verificarFecuencia(pasaporte: any){
+  verificarFecuencia(pasaporte: any) {
 
     const dateStart: Date = new Date();
     dateStart.setDate(new Date().getDate() - 365);
 
-    this.pasajeroService.getConcurrencia(pasaporte, this.datePipe.transform(dateStart, 'yyyy-MM-dd')).subscribe( resp => {
+    this.pasajeroService.getConcurrencia(pasaporte, this.datePipe.transform(dateStart, 'yyyy-MM-dd')).subscribe(resp => {
       this.viajeroFrecuente = resp;
     })
   }
 
-  enviarPDFS(){
-    console.log("Enviando PDFs", this.tiqueteList);
+  enviarPDFS() {
+
+    this.tiqueteList.forEach(element => {
+      const nombreC = element.pasajero.nombre + element.pasajero.apellido;
+      const fechaIda = element.vueloida.fechavuelo + ' a las ' + element.vueloida.horavuelo;
+      const fechaRegreso = element.vueloregreso.fechavuelo + ' a las ' + element.vueloregreso.horavuelo;
+      const valor = element.valortotal;
+      const reserva = element.idreserva.idreserva;
+      const pdfTiquete: any = {
+        content: [
+          {
+            text: 'Aerolinea Bajo Costo\n\n',
+            style: 'header'
+          },
+          {
+            text: 'Señor(a): '+ nombreC + ' su reserva es '+ reserva + ', su vuelo de ida esta programado para el ' + 
+            fechaIda + ' y el regreso esta programado para el ' + fechaRegreso + ', con un valor total de ' + valor,
+            style: 'body'
+          }
+        ],
+        styles: {
+          header: {
+            fontSize: 18,
+            alignment: 'justify'
+          },
+          body: {
+            fontSize: 12
+          }
+        }
+      }
+
+      const pdf = pdfMake.createPdf(pdfTiquete);
+
+      pdf.download();
+    });
+
   }
 
   resetFormPasajeros() {
