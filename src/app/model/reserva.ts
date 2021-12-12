@@ -1,4 +1,4 @@
 export class Reserva {
-    idreserva = '';
+    idreserva = '-1';
     valorreserva = 0;
 }

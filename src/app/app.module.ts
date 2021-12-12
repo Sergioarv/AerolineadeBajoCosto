@@ -24,7 +24,7 @@ import { TiempoPipe } from './utils/pipe/tiempo.pipe';
     HttpClientModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
-    MatExpansionModule
+    MatExpansionModule,
   ],
   schemas:[
     CUSTOM_ELEMENTS_SCHEMA

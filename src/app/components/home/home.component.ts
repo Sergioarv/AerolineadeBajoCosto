@@ -1,6 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 import { Ciudad } from 'src/app/model/ciudad';
 import { Pasajero } from 'src/app/model/pasajero';
 import { Reserva } from 'src/app/model/reserva';
@@ -158,6 +159,7 @@ export class HomeComponent implements OnInit {
     this.vueloService.buscarVuelos(fechaIda, ruta).subscribe((resp) => {
       this.vueloIdaList = resp;
       this.descuIda = this.calcDesc(fechaIda);
+    }, error => {
     });
   }
 

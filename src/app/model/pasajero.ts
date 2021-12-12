@@ -1,6 +1,6 @@
 export class Pasajero {
 
-    pasaporte = '';
+    pasaporte = '-1';
     nombre = '';
     apellido = '';
     telefono = 1;

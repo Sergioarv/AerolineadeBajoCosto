@@ -1,5 +1,5 @@
 export class Ciudad {
-  idciudad = '';
+  idciudad = '-1';
   nombreciudad = '';
   visado = '';
 }

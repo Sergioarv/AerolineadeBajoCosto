@@ -3,7 +3,7 @@ import { Vuelo } from "./vuelo";
 
 export class Tiquete {
     
-    idtiquete = '';
+    idtiquete = '-1';
     pasajero: Pasajero = new Pasajero;
     vueloida: Vuelo = new Vuelo();
     vueloregreso: Vuelo = new Vuelo();

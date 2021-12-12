@@ -1,7 +1,7 @@
 import { Ciudad } from "./ciudad";
 
 export class Ruta {
-    idruta = '';
+    idruta = '-1';
     escala = '';
     duracion = '';
     origen: Ciudad = new Ciudad();

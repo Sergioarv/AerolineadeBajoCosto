@@ -82,6 +82,12 @@
             <th scope="col">{{ vuelo.millas }}</th>
             <th scope="col">{{ vuelo.precio * descuIda | currency:"COP":"symbol-narrow":'1.0-2' }}</th>
           </tr>
+          <tr *ngIf="vueloIdaList.length === 0">
+            <th scope="col" colspan="10">
+              <p style="text-align: center; font-size: x-large; color: red;">No hay vuelos desde el origen al destino en
+                la fecha indicada</p>
+            </th>
+          </tr>
         </tbody>
       </table>
     </mat-form-field>
@@ -168,6 +174,12 @@
             <th scope="col">{{ vuelo.idruta.escala ? 'Con Escalas' : 'Sin Escalas'}}</th>
             <th scope="col">{{ vuelo.millas }}</th>
             <th scope="col">{{ vuelo.precio * descuRegreso | currency:"COP":"symbol-narrow":'1.0-2' }}</th>
+          </tr>
+          <tr *ngIf="vueloRegresoList.length === 0">
+            <th scope="col" colspan="10">
+              <p style="text-align: center; font-size: x-large; color: red;">No hay vuelos desde el origen al destino en
+                la fecha indicada</p>
+            </th>
           </tr>
         </tbody>
       </table>
