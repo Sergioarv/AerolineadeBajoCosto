@@ -373,6 +373,19 @@ export class HomeComponent implements OnInit {
     this.resetFormBusqueda();
     this.resetFormBusquedaRegreso();
     this.resetFormPasajeros();
+    this.ciudadList = [];
+    this.rutasList = [];
+    this.vueloIdaList = [];
+    this.vueloRegresoList = [];
+    this.tiqueteList = [];
+    this.pasajero = new Pasajero();
+    this.tiquete = new Tiquete();
+    this.reserva = new Reserva();
+    this.dateNow = new Date();
+    this.vueloDeIda = new Vuelo();
+    this.vueloDeRegreso = new Vuelo();
+    this.cantDePasajeros = 1;
+    this.minDate = this.datePipe.transform(this.dateNow, 'yyyy-MM-dd');
     this.toggle(0);
   }
 
